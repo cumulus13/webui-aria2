@@ -162,5 +162,23 @@ translations.id_ID = {
   "Trying to connect to aria2 using the new connection configuration":
     "Mencoba koneksi ke aria2 menggunakan konfigurasi koneksi baru",
   // {{name}} refers to the download name, do not modify.
-  "Remove {{name}} and associated meta-data?": "Hapus {{name}} dan meta-data yang berhubungan?"
+  "Remove {{name}} and associated meta-data?": "Hapus {{name}} dan meta-data yang berhubungan?",
+
+  // Download scheduler
+  "Download Scheduler": "Penjadwal Unduhan",
+  "Enable scheduler": "Aktifkan penjadwal",
+  "Downloads above the limit are queued and started automatically when a running download is finished. Disabling the scheduler sends all queued downloads to aria2 immediately.": "Unduhan di atas batas akan diantrekan dan dijalankan otomatis setelah unduhan yang berjalan selesai. Menonaktifkan penjadwal akan mengirim seluruh antrean ke aria2 sekaligus.",
+  "Max downloads": "Maks unduhan",
+  "Maximum number of downloads running at the same time.": "Jumlah maksimum unduhan yang berjalan bersamaan.",
+  "Running": "Berjalan",
+  "Queued": "Antrean",
+  "Queue": "Antrean",
+  "Manage queue": "Kelola antrean",
+  "No queued downloads": "Tidak ada unduhan dalam antrean",
+  "Move up": "Naikkan",
+  "Move down": "Turunkan",
+  "Start now": "Mulai sekarang",
+  "Remove": "Hapus",
+  "Clear queue": "Kosongkan antrean",
+  "Close": "Tutup"
 };

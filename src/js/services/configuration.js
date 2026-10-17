@@ -36,6 +36,11 @@ export default angular
       starredProps: true // only shown when at least one property is added to the starred list, set to false to permanently hide the Quick Access Settings inside the sidebar
     }
   })
+  .constant("$schedulerDefaults", {
+    // download scheduler: downloads above the limit are queued and started when a running one is done
+    enabled: true, // set to false to disable the scheduler by default (can be changed in Settings > Scheduler)
+    maxDownloads: 3 // maximum number of downloads running at the same time
+  })
   .constant("$starredProps", [
     // default list of Quick Access Properties. Can be overridden by making modification through the Global Settings dialog
     // go to Global Settings dialog to see their description

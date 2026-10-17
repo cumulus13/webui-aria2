@@ -157,5 +157,23 @@ translations.en_US = {
     "",
   "Trying to connect to aria2 using the new connection configuration": "",
   // {{name}} refers to the download name, do not modify.
-  "Remove {{name}} and associated meta-data?": ""
+  "Remove {{name}} and associated meta-data?": "",
+
+  // Download scheduler
+  "Download Scheduler": "",
+  "Enable scheduler": "",
+  "Downloads above the limit are queued and started automatically when a running download is finished. Disabling the scheduler sends all queued downloads to aria2 immediately.": "",
+  "Max downloads": "",
+  "Maximum number of downloads running at the same time.": "",
+  "Running": "",
+  "Queued": "",
+  "Queue": "",
+  "Manage queue": "",
+  "No queued downloads": "",
+  "Move up": "",
+  "Move down": "",
+  "Start now": "",
+  "Remove": "",
+  "Clear queue": "",
+  "Close": ""
 };

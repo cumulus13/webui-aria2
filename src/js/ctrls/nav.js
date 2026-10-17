@@ -131,6 +131,10 @@ export default angular
         });
       };
 
+      scope.showScheduler = function() {
+        modals.invoke("scheduler");
+      };
+
       scope.showServerInfo = function() {
         modals.invoke("server_info");
       };

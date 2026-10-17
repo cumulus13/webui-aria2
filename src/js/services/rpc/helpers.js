@@ -4,14 +4,34 @@ export default angular
   .module("webui.services.rpc.helpers", [
     "webui.services.deps",
     "webui.services.rpc",
-    "webui.services.alerts"
+    "webui.services.alerts",
+    "webui.services.scheduler"
   ])
   .factory("$rpchelpers", [
     "$_",
     "$rpc",
     "$alerts",
-    function(_, rpc, alerts) {
+    "$scheduler",
+    function(_, rpc, alerts, scheduler) {
       var miscellaneous = { version: "", enabledFeatures: [] };
+      // label of a queued URI download: the file name of its first URI
+      var uriName = function(uris) {
+        var u = (uris && uris[0]) || "";
+        if (u.indexOf("magnet:") === 0) {
+          var m = /[?&]dn=([^&]+)/.exec(u);
+          try {
+            return m ? decodeURIComponent(m[1].replace(/\+/g, " ")) : u.substr(0, 60);
+          } catch (e) {
+            return u.substr(0, 60);
+          }
+        }
+        var path = u.split(/[?#]/)[0].replace(/\/+$/, "");
+        var base = path.substr(path.lastIndexOf("/") + 1);
+        try {
+          base = decodeURIComponent(base);
+        } catch (e) {}
+        return base || u;
+      };
       rpc.once("getVersion", [], function(data) {
         miscellaneous = data[0];
       });
@@ -37,30 +57,29 @@ export default angular
                 uri_parsed.push(uri_element);
               }
             });
-            // passing true to batch all the addUri calls
-            rpc.once("addUri", [uri_parsed, uriSettings], cb, true);
+            // the scheduler dispatches it now, or queues it when the max number of running downloads is reached
+            scheduler.enqueue("addUri", [uri_parsed, uriSettings], uriName(uri_parsed), cb);
           });
-
-          // now dispatch all addUri syscalls
-          rpc.forceUpdate();
         },
-        addTorrents: function(txts, settings, cb) {
-          _.each(txts, function(txt) {
-            // passing true to batch all the addUri calls
-            rpc.once("addTorrent", [txt, [], settings], cb, true);
+        addTorrents: function(txts, settings, cb, names) {
+          _.each(txts, function(txt, i) {
+            scheduler.enqueue(
+              "addTorrent",
+              [txt, [], settings],
+              (names && names[i]) || "Torrent #" + (i + 1),
+              cb
+            );
           });
-
-          // now dispatch all addUri syscalls
-          rpc.forceUpdate();
         },
-        addMetalinks: function(txts, settings, cb) {
-          _.each(txts, function(txt) {
-            // passing true to batch all the addUri calls
-            rpc.once("addMetalink", [txt, settings], cb, true);
+        addMetalinks: function(txts, settings, cb, names) {
+          _.each(txts, function(txt, i) {
+            scheduler.enqueue(
+              "addMetalink",
+              [txt, settings],
+              (names && names[i]) || "Metalink #" + (i + 1),
+              cb
+            );
           });
-
-          // now dispatch all addUri syscalls
-          rpc.forceUpdate();
         }
       };
     }

@@ -23,6 +23,7 @@ import serviceRpcHelpers from "services/rpc/helpers";
 import serviceRpcJsoncall from "services/rpc/jsoncall";
 import serviceRpcSockcall from "services/rpc/sockcall";
 import serviceRpcSyscall from "services/rpc/syscall";
+import serviceScheduler from "services/scheduler";
 import serviceSettings from "services/settings/settings";
 import serviceFilters from "services/settings/filters";
 import serviceModals from "services/modals";
@@ -45,6 +46,7 @@ import ctrlMain from "ctrls/main";
 import ctrlModal from "ctrls/modal";
 import ctrlNav from "ctrls/nav";
 import ctrlProps from "ctrls/props";
+import ctrlScheduler from "ctrls/scheduler";
 
 // Translations
 require("translate/nl_NL");
@@ -77,6 +79,7 @@ var webui = angular.module("webui", [
   serviceRpcSyscall,
   serviceModals,
   serviceAlerts,
+  serviceScheduler,
   serviceSettings,
   serviceFilters,
   filterBytes,
@@ -90,6 +93,7 @@ var webui = angular.module("webui", [
   ctrlModal,
   ctrlNav,
   ctrlProps,
+  ctrlScheduler,
   // external deps
   "ui.bootstrap",
   // translate

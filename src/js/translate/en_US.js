@@ -158,5 +158,23 @@ translations.en_US = {
     "Successfully connected to Aria2 through remote RPC, however the connection is still insecure. For complete security try adding an authorization secret token while starting Aria2 (through the flag --rpc-secret)",
   "Trying to connect to aria2 using the new connection configuration":
     "Trying to connect to aria2 using the new connection configuration",
-  "Remove {{name}} and associated meta-data?": "Remove {{name}} and associated meta-data?"
+  "Remove {{name}} and associated meta-data?": "Remove {{name}} and associated meta-data?",
+
+  // Download scheduler
+  "Download Scheduler": "Download Scheduler",
+  "Enable scheduler": "Enable scheduler",
+  "Downloads above the limit are queued and started automatically when a running download is finished. Disabling the scheduler sends all queued downloads to aria2 immediately.": "Downloads above the limit are queued and started automatically when a running download is finished. Disabling the scheduler sends all queued downloads to aria2 immediately.",
+  "Max downloads": "Max downloads",
+  "Maximum number of downloads running at the same time.": "Maximum number of downloads running at the same time.",
+  "Running": "Running",
+  "Queued": "Queued",
+  "Queue": "Queue",
+  "Manage queue": "Manage queue",
+  "No queued downloads": "No queued downloads",
+  "Move up": "Move up",
+  "Move down": "Move down",
+  "Start now": "Start now",
+  "Remove": "Remove",
+  "Clear queue": "Clear queue",
+  "Close": "Close"
 };

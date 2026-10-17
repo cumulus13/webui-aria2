@@ -26,6 +26,17 @@ node node-server.js
 
 1. You can always select which files to download in case of torrents or metalinks. Just pause a download and a list icon should appear next to the settings button. To select which files to download before starting the download, give the flag --pause-metadata to aria2. See [link](https://aria2.github.io/manual/en/html/aria2c.html#cmdoption--pause-metadata)
 
+# Download Scheduler
+
+[#download-scheduler](#download-scheduler)
+
+Limits how many downloads run at the same time. Downloads added above the limit (by URIs, torrents or metalinks) are queued and started automatically, in order, as soon as a running download finishes, is paused, removed or fails.
+
+- Settings > Download Scheduler: enable/disable, set *Max downloads*, reorder / start now / remove / clear queued items.
+- Defaults live in `$schedulerDefaults` in [configuration.js](src/js/services/configuration.js) (`enabled: true`, `maxDownloads: 3`).
+- Torrents that are only seeding do not count as running; paused downloads do not count either.
+- The queue is stored in the browser (localStorage) and dispatched by the open WebUI page, keep the page open for queued downloads to start.
+
 # Configuration
 
 Read and edit [configuration.js](src/js/services/configuration.js).

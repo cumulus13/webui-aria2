@@ -3,24 +3,28 @@ import angular from "angular";
 var parseFiles = function(files, cb) {
   var cnt = 0;
   var txts = [];
-  var onload = function(res) {
-    var txt = res.target.result;
-    txts.push(txt.split(",")[1]);
-    cnt--;
-    if (!cnt) {
-      cb(txts);
-    }
-  };
-  _.each(files, function(file) {
+  var names = [];
+  var failed = false;
+  // keep results in the same order as the selected files
+  _.each(files, function(file, i) {
     cnt++;
     console.log("starting file reader");
     var reader = new FileReader();
-    reader.onload = onload;
+    reader.onload = function(res) {
+      if (failed) return;
+      txts[i] = res.target.result.split(",")[1];
+      names[i] = file.name;
+      cnt--;
+      if (!cnt) {
+        cb(txts, names);
+      }
+    };
     reader.onerror = function(err) {
       // return error
       // TODO: find a better way to propogate error upstream
       console.log("got back error", err);
-      cb([]);
+      failed = true;
+      cb([], []);
     };
     reader.readAsDataURL(file);
   });
@@ -32,7 +36,8 @@ export default angular
     "webui.services.deps",
     "webui.services.modals",
     "webui.services.rpc",
-    "webui.services.configuration"
+    "webui.services.configuration",
+    "webui.services.scheduler"
   ])
   .controller("ModalCtrl", [
     "$_",
@@ -42,7 +47,35 @@ export default angular
     "$rpc",
     "$fileSettings",
     "$downloadProps",
-    function(_, scope, $modal, modals, rpc, fsettings, dprops) {
+    "$scheduler",
+    function(_, scope, $modal, modals, rpc, fsettings, dprops, scheduler) {
+      scope.sched = scheduler;
+      scope.schedulerModal = {
+        open: function() {
+          var self = this;
+          this.inst = $modal.open({
+            templateUrl: "scheduler.html",
+            scope: scope,
+            windowClass: "modal-large"
+          });
+          this.inst.result.then(
+            function() {
+              delete self.inst;
+            },
+            function() {
+              delete self.inst;
+            }
+          );
+        }
+      };
+      modals.register("scheduler", function() {
+        if (scope.schedulerModal.inst) {
+          // Already open.
+          return;
+        }
+        scope.schedulerModal.open();
+      });
+
       scope.getUris = {
         open: function(cb) {
           var self = this;
@@ -244,7 +277,7 @@ export default angular
               function() {
                 delete self.inst;
                 if (cb) {
-                  parseFiles(self.files, function(txts) {
+                  parseFiles(self.files, function(txts, names) {
                     var settings = {};
 
                     // no need to send in default values, just the changed ones
@@ -258,7 +291,7 @@ export default angular
                     }
 
                     console.log("sending settings:", settings);
-                    cb(txts, settings);
+                    cb(txts, settings, undefined, names);
                   });
                 }
               },

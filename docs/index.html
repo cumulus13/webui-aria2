@@ -225,6 +225,10 @@
                         </li>
 
                         <li>
+                            <a ng-click="showScheduler()" href="#"><svg class="icon icon-fw"><use xlink:href="#icon-list-alt"></use></svg> {{ 'Download Scheduler' | translate }}</a>
+                        </li>
+
+                        <li>
                             <a ng-click="showServerInfo()" href="#"><svg class="icon icon-fw"><use xlink:href="#icon-info-circle"></use></svg> {{ 'Server info' | translate }}</a>
                         </li>
 
@@ -347,6 +351,19 @@
         <li>
           <span title="Upload Speed"><svg class="icon icon-fw"><use xlink:href="#icon-arrow-circle-o-up"></use></svg>{{gstats.uploadSpeed | bspeed}}</span><br />
           <span title="Download Speed"><svg class="icon icon-fw"><use xlink:href="#icon-arrow-circle-o-down"></use></svg>{{gstats.downloadSpeed | bspeed}}</span>
+        </li>
+      </ul>
+      <!-- }}} -->
+
+      <!-- {{{ download scheduler -->
+      <ul class="clearfix nav nav-list" ng-controller="SchedulerCtrl" ng-show="sched.state.enabled">
+        <li class="nav-header">{{ 'Download Scheduler' | translate }}</li>
+        <li>
+          <span>{{ 'Running' | translate }}: {{sched.state.running}} / {{sched.state.max}}</span><br />
+          <span>{{ 'Queued' | translate }}: {{sched.state.queue.length}}</span>
+        </li>
+        <li>
+          <button type="button" class="btn btn-default btn-sm" ng-click="manage()">{{ 'Manage queue' | translate }}</button>
         </li>
       </ul>
       <!-- }}} -->
@@ -835,6 +852,63 @@
 
 <!-- {{{ modals -->
 <div ng-controller="ModalCtrl">
+
+<!--{{{ scheduler modal -->
+<script type="text/ng-template" id="scheduler.html">
+  <div class="modal-header">
+    <button class="close" ng-click="$dismiss()">&times;</button>
+    <h4>{{ 'Download Scheduler' | translate }}</h4>
+  </div>
+
+  <div class="modal-body">
+    <form class="form-horizontal" ng-submit="sched.update()">
+      <fieldset>
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-9 controls">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" ng-model="sched.state.enabled" ng-change="sched.update()"/>
+                {{ 'Enable scheduler' | translate }}
+              </label>
+            </div>
+            <p class="help-block">{{ 'Downloads above the limit are queued and started automatically when a running download is finished. Disabling the scheduler sends all queued downloads to aria2 immediately.' | translate }}</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label">{{ 'Max downloads' | translate }}</label>
+          <div class="col-sm-9 controls">
+            <input type="number" min="1" step="1" class="form-control" ng-model="sched.state.max" ng-change="sched.update()" ng-disabled="!sched.state.enabled"/>
+            <p class="help-block">{{ 'Maximum number of downloads running at the same time.' | translate }} {{ 'Running' | translate }}: {{sched.state.running}}</p>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+
+    <h5>{{ 'Queue' | translate }} ({{sched.state.queue.length}})</h5>
+    <p class="help-block" ng-show="!sched.state.queue.length">{{ 'No queued downloads' | translate }}</p>
+    <table class="table table-condensed" ng-show="sched.state.queue.length">
+      <tbody>
+        <tr ng-repeat="item in sched.state.queue track by item.id">
+          <td>{{$index + 1}}</td>
+          <td style="word-break: break-all;">{{item.name}}</td>
+          <td class="text-right" style="white-space: nowrap;">
+            <button type="button" class="btn btn-xs btn-default" ng-click="sched.move(item, -1)" ng-disabled="$first" title="{{ 'Move up' | translate }}">&uarr;</button>
+            <button type="button" class="btn btn-xs btn-default" ng-click="sched.move(item, 1)" ng-disabled="$last" title="{{ 'Move down' | translate }}">&darr;</button>
+            <button type="button" class="btn btn-xs btn-default" ng-click="sched.startNow(item)">{{ 'Start now' | translate }}</button>
+            <button type="button" class="btn btn-xs btn-default" ng-click="sched.remove(item)" title="{{ 'Remove' | translate }}">&times;</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-show="sched.state.queue.length" ng-click="sched.clear()">{{ 'Clear queue' | translate }}</button>
+    <button type="button" class="btn btn-default btn-primary" ng-click="$close()">{{ 'Close' | translate }}</button>
+  </div>
+</script>
+<!-- }}} -->
 
 <!--{{{ add uri modal -->
 <script type="text/ng-template" id="getUris.html">

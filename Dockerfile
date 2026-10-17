@@ -1,3 +1,11 @@
+# build stage: compiles src/ into docs/ (node-sass 4 in package-lock.json needs Node 10)
+FROM node:10 AS webui-builder
+WORKDIR /build
+COPY package.json package-lock.json webpack.config.js postcss.config.js ./
+RUN npm ci --no-audit --no-fund
+COPY src ./src
+RUN npx webpack -p
+
 FROM debian:bookworm-slim
 
 ARG GOREMAN_VERSION=v0.3.19
@@ -10,7 +18,7 @@ RUN apt-get update \
 	&& apt-get install -y --no-install-recommends aria2 busybox curl ca-certificates gosu \
 	&& rm -rf /var/lib/apt/lists/*
 
-ADD ./docs /webui-aria2
+COPY --from=webui-builder /build/docs /webui-aria2
 
 # goreman supervisor install (pinned, override with --build-arg GOREMAN_VERSION=...)
 RUN curl -fsSL "https://github.com/mattn/goreman/releases/download/${GOREMAN_VERSION}/goreman_${GOREMAN_VERSION}_linux_amd64.tar.gz" -o /tmp/goreman.tar.gz \

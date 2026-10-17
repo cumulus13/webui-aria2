@@ -6,3 +6,5 @@ stats.json
 node_modules
 # Added entries (1 items)
 *.patch
+# PT backup directory
+.pt/

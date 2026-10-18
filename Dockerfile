@@ -10,7 +10,7 @@ FROM debian:bookworm-slim
 
 ARG GOREMAN_VERSION=v0.3.19
 
-# less priviledge user, the id should map the user the downloaded files belongs to
+# optional less privileged user, used only when the PUID env is set (see entrypoint.sh)
 RUN groupadd -r dummy && useradd -r -g dummy dummy -u 1000
 
 # webui + aria2 (+ gosu to drop privileges)
@@ -26,10 +26,8 @@ RUN curl -fsSL "https://github.com/mattn/goreman/releases/download/${GOREMAN_VER
   && mv /tmp/goreman_*/goreman /usr/local/bin/goreman \
   && rm -rf /tmp/goreman*
 
-# goreman setup
-RUN printf 'web: gosu dummy /bin/busybox httpd -f -p 8080 -h /webui-aria2\nbackend: gosu dummy /usr/bin/aria2c --enable-rpc --rpc-listen-all --dir=/downloads\n' > /Procfile
-
-WORKDIR /
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # aria2 downloads directory
 VOLUME /downloads
@@ -41,4 +39,4 @@ EXPOSE 6800/tcp
 EXPOSE 8080/tcp
 
 CMD ["start"]
-ENTRYPOINT ["/usr/local/bin/goreman"]
+ENTRYPOINT ["/entrypoint.sh"]

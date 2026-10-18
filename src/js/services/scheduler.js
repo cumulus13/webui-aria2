@@ -141,7 +141,7 @@ export default angular
           save();
           rpc.forceUpdate();
         }
-        state.running = running() || 0;
+        state.running = (running() || 0) + pendingAdds + inflight.length;
       }
 
       function refreshInflight() {

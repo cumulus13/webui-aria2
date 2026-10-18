@@ -8,3 +8,7 @@ node_modules
 *.patch
 # PT backup directory
 .pt/
+
+# Ignore Sublime Text project files
+*.sublime-project
+*.sublime-workspace

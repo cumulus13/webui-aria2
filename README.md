@@ -28,8 +28,6 @@ node node-server.js
 
 # Download Scheduler (New)
 
-[#download-scheduler](#download-scheduler)
-
 Limits how many downloads run at the same time. Downloads added above the limit (by URIs, torrents or metalinks) are queued and started automatically, in order, as soon as a running download finishes, is paused, removed or fails.
 
 - Settings > Download Scheduler: enable/disable, set *Max downloads*, reorder / start now / remove / clear queued items.
